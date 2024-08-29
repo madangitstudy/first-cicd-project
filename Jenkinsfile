@@ -6,14 +6,14 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = "your-dockerhub-username/spring-boot-cicd"
+        DOCKER_IMAGE = "madanbokare/spring-boot-cicd"
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds' // Jenkins credentials ID for DockerHub
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-username/spring-boot-cicd.git'
+                git 'https://github.com/madangitstudy/first-cicd-project.git'
             }
         }
 
