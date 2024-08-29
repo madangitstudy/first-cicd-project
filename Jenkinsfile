@@ -1,60 +1,36 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven' // The name of the Maven tool configured in Jenkins
-    }
-
-    environment {
-        DOCKER_IMAGE = "madanbokare/spring-boot-cicd"
-        DOCKER_CREDENTIALS_ID = 'dockerhub-creds' // Jenkins credentials ID for DockerHub
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                git 'https://github.com/madangitstudy/first-cicd-project.git'
+                git url: 'https://github.com/madangitstudy/first-cicd-project.git', branch: 'main'
             }
         }
-
         stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Docker Build and Push') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        docker.image(DOCKER_IMAGE).push("latest")
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def app = docker.build("your-docker-image:tag")
+                        app.push()
                     }
                 }
             }
         }
-
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to Kubernetes...'
-                sh '''
-                kubectl apply -f k8s/deployment.yaml
-                kubectl apply -f k8s/service.yaml
-                '''
+                sh 'kubectl apply -f k8s/deployment.yaml'
+                sh 'kubectl apply -f k8s/service.yaml'
             }
+        }
+    }
+}
+
         }
     }
 }
