@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the packaged jar file into the container
-COPY target/helloworld-1.0-SNAPSHOT.jar app.jar
+COPY target/spring-boot-cicd-0.0.1-SNAPSHOT.jar app.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
