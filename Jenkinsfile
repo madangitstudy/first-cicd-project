@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        def app = docker.build("your-docker-image:tag")
+                        def app = docker.build("madanbokare/project1")
                         app.push()
                     }
                 }
